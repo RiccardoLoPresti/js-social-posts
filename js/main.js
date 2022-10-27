@@ -56,22 +56,23 @@ const posts = [
         "created": "2021-03-05"
     }
 ];
-//prendo il container tramite id
-const container = document.getElementById('container');
-
-const likeBtn = document.getElementsByClassName('like-button');
-
-console.log(likeBtn);
 
 //richiamo la funzione init()
 init();
 
-//funzione init() svuota il container e stampa tramite stampPost()
+//funzione init()
 function init() {
+
+    //prendo il container tramite id
+    const container = document.getElementById('container');
+
     //svuoto container
     container.innerHTML ='';
+
+    
     //ciclo tutto l'array dei post
     posts.forEach((post) => {
+
         //richiamo la funzione che mi stampa i post in modo dinamico passando come vallore post
         stampPost(post);
     });
@@ -127,6 +128,17 @@ function stampPost(post) {
     `;
 
     container.innerHTML += element;
+
+    //non so perchè ma se non facevo così non mi prendeva l htmlcollection
+    document.addEventListener("DOMContentLoaded", function() {
+        let likeBtn = document.getElementsByClassName('js-like-button');
+        
+
+        //richiamo funzione like
+        btnLike(likeBtn,post.likes)
+        
+    })
+    
 }
 
 function dataReverse(string) {
@@ -139,20 +151,38 @@ function dataString(string) {
 }
 
 function genInitials(string, name) {
-    let initials;
     if(string === null){
+        //splitto nome e cognome in due array
         const arrayFullName = name.split(' ');
-        
+        //prendo il primo array e lo splitto a sua volta
         const arrayName = arrayFullName[0].split('');
+        //prendo il secondo array e lo splitto a sua volta
         const arraySurname = arrayFullName[1].split('');
-        
-        const firstLetterName = arrayName[0];
-        const firstLetterSurname = arraySurname[0];
-        
-        initials = firstLetterName + firstLetterSurname;
+        //salvo il le iniziali
+        initials = arrayName[0] + arraySurname[0];
+        //return di iniziali
+        return initials;
     }
-    return initials;
 }
+
+function btnLike(likeBtn,likes) {
+    let counter = 0;
+    for (let i = 0; i < likeBtn.length; i++) {
+        likeBtn[i].addEventListener("click", function(e,i) {
+            e.preventDefault()
+            this.classList.toggle('like-button--liked');
+            
+            counter++
+            let output = likes + 1;
+            console.log(counter);
+            console.log(output);
+            if(counter > 1) counter = 0;
+            console.log('dopo',counter);
+            
+        });
+    }
+}
+
 
 /*function getMonthDiff(todayDate,imgDate) {
     let months;
