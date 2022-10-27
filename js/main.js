@@ -1,6 +1,3 @@
-/*Ricreiamo un feed social aggiungendo al layout di base fornito, il nostro script JS in cui:
-Utilizzando la base dati fornita e prendendo come riferimento il layout di esempio presente nell’html, stampiamo i post del nostro feed.
-Formattare le date in formato italiano (gg/mm/aaaa)*/
 
 const posts = [
     {
@@ -62,6 +59,10 @@ const posts = [
 //prendo il container tramite id
 const container = document.getElementById('container');
 
+const likeBtn = document.getElementsByClassName('like-button');
+
+console.log(likeBtn);
+
 //richiamo la funzione init()
 init();
 
@@ -78,8 +79,6 @@ function init() {
 
 //funzione stampPost() mi stampa i post nell'HTML
 function stampPost(post) {
-    //salvo in una variabile tutti i dati che mi servono
-    const {id,content,media,author,likes,created} = posts;
 
     //salvo la data rovesciata in un array
     const arrayDate = dataReverse(post.created);
@@ -88,7 +87,10 @@ function stampPost(post) {
     const dateStr = dataString(arrayDate);
 
     //sostituisco le virgole con il trattino
-    const date = dateStr.replace(/,/g,"-")
+    const date = dateStr.replace(/,/g,"-");
+
+    //salvo in una variabile le iniziali richiamando la funzione
+    let initials = genInitials(post.author.image,post.author.name);
 
     //salvo in element HTML da stampare in pagina
     let element = `
@@ -96,7 +98,7 @@ function stampPost(post) {
             <div class="post__header">
                 <div class="post-meta">
                     <div class="post-meta__icon">
-                        <img class="profile-pic" src="${post.author.image}" alt="NON C'è FOTO">
+                        <img class="profile-pic" src="${post.author.image}" alt="${initials}">
                     </div>
                     <div class="post-meta__data">
                         <div class="post-meta__author">${post.author.name}</div>
@@ -111,7 +113,7 @@ function stampPost(post) {
             <div class="post__footer">
                 <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button  js-like-button" href="#" data-postid="1">
+                        <a class="like-button  js-like-button" href="#" id="${post.id}">
                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                             <span class="like-button__label">Mi Piace</span>
                         </a>
@@ -125,7 +127,6 @@ function stampPost(post) {
     `;
 
     container.innerHTML += element;
-    
 }
 
 function dataReverse(string) {
@@ -135,6 +136,22 @@ function dataReverse(string) {
 
 function dataString(string) {
     return date = string.toString();
+}
+
+function genInitials(string, name) {
+    let initials;
+    if(string === null){
+        const arrayFullName = name.split(' ');
+        
+        const arrayName = arrayFullName[0].split('');
+        const arraySurname = arrayFullName[1].split('');
+        
+        const firstLetterName = arrayName[0];
+        const firstLetterSurname = arraySurname[0];
+        
+        initials = firstLetterName + firstLetterSurname;
+    }
+    return initials;
 }
 
 /*function getMonthDiff(todayDate,imgDate) {
