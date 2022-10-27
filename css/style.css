@@ -16,6 +16,12 @@ h1 {
     color: white;
 }
 
+img{
+    font: 40px Impact;
+    text-align: center;
+    line-height: 35px;
+}
+
 .main-title {
     text-align: center;
     margin: 24px 0;
