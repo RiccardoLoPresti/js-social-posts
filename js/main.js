@@ -152,7 +152,7 @@ function genInitials(name) {
     const arrayName = arrayFullName[0].split('');
     //prendo il secondo array e lo splitto a sua volta
     const arraySurname = arrayFullName[1].split('');
-    //salvo il le iniziali
+    //salvo le iniziali
     initials = arrayName[0] + arraySurname[0];
     //return di iniziali
     return initials;
@@ -161,18 +161,29 @@ function genInitials(name) {
 //non incrementa il numero dei likes
 function btnLike(likeBtn) {
     for (let i = 0; i < likeBtn.length; i++) {
-        likeBtn[i].addEventListener("click", function(e,i) {
+        likeBtn[i].addEventListener("click", function(e) {
             e.preventDefault();
-            const postId = this.getAttribute('id');
-            console.log(postId);
-            this.classList.toggle('like-button--liked');
-            const like = document.getElementById('like-counter-'+ postId).innerText;
 
-            if(this.classList.includes('like-button--liked')){
-                like+= 1;
-            }else{
-                like-= 1;
+            const postId = this.getAttribute('id');
+            console.log('questo è l\'id:',postId);
+
+            this.classList.toggle('like-button--liked');
+
+            const nLike = document.getElementById('like-counter-'+ postId);
+
+            let like = parseInt(document.getElementById('like-counter-'+ postId).innerText);
+
+            console.log('questi sono i like:',like);
+
+            let likeUp;
+
+            if(this.classList.contains('like-button--liked')){
+                likeUp = like+=1;
+            } else {
+                likeUp = like-=1;
             }
+
+            nLike.innerHTML = likeUp;
         });
     }
 }
