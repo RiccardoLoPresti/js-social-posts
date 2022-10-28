@@ -91,7 +91,7 @@ function stampPost(post) {
     const date = dateStr.replace(/,/g,"-");
 
     //salvo in una variabile le iniziali richiamando la funzione
-    let initials = genInitials(post.author.image,post.author.name);
+    let initials = genInitials(post.author.name);
 
     //salvo in element HTML da stampare in pagina
     let element = `
@@ -120,7 +120,7 @@ function stampPost(post) {
                         </a>
                     </div>
                     <div class="likes__counter">
-                        Piace a <b id="like-counter-1" class="js-likes-counter">${post.likes}</b> persone
+                        Piace a <b id="like-counter-${post.id}" class="js-likes-counter">${post.likes}</b> persone
                     </div>
                 </div> 
             </div>
@@ -129,16 +129,10 @@ function stampPost(post) {
 
     container.innerHTML += element;
 
-    //non so perchè ma se non facevo così non mi prendeva l htmlcollection
-    document.addEventListener("DOMContentLoaded", function() {
-        let likeBtn = document.getElementsByClassName('js-like-button');
-        
-
-        //richiamo funzione like
-        btnLike(likeBtn,post.likes)
-        
-    })
+    const likeBtn = document.getElementsByClassName('js-like-button');
     
+    //richiamo funzione like
+    btnLike(likeBtn,post.likes);
 }
 
 function dataReverse(string) {
@@ -150,35 +144,35 @@ function dataString(string) {
     return date = string.toString();
 }
 
-function genInitials(string, name) {
-    if(string === null){
-        //splitto nome e cognome in due array
-        const arrayFullName = name.split(' ');
-        //prendo il primo array e lo splitto a sua volta
-        const arrayName = arrayFullName[0].split('');
-        //prendo il secondo array e lo splitto a sua volta
-        const arraySurname = arrayFullName[1].split('');
-        //salvo il le iniziali
-        initials = arrayName[0] + arraySurname[0];
-        //return di iniziali
-        return initials;
-    }
+function genInitials(name) {
+
+    //splitto nome e cognome in due array
+    const arrayFullName = name.split(' ');
+    //prendo il primo array e lo splitto a sua volta
+    const arrayName = arrayFullName[0].split('');
+    //prendo il secondo array e lo splitto a sua volta
+    const arraySurname = arrayFullName[1].split('');
+    //salvo il le iniziali
+    initials = arrayName[0] + arraySurname[0];
+    //return di iniziali
+    return initials;
 }
 
-function btnLike(likeBtn,likes) {
-    let counter = 0;
+//non incrementa il numero dei likes
+function btnLike(likeBtn) {
     for (let i = 0; i < likeBtn.length; i++) {
         likeBtn[i].addEventListener("click", function(e,i) {
-            e.preventDefault()
+            e.preventDefault();
+            const postId = this.getAttribute('id');
+            console.log(postId);
             this.classList.toggle('like-button--liked');
-            
-            counter++
-            let output = likes + 1;
-            console.log(counter);
-            console.log(output);
-            if(counter > 1) counter = 0;
-            console.log('dopo',counter);
-            
+            const like = document.getElementById('like-counter-'+ postId).innerText;
+
+            if(this.classList.includes('like-button--liked')){
+                like+= 1;
+            }else{
+                like-= 1;
+            }
         });
     }
 }
